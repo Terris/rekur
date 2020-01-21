@@ -12,3 +12,15 @@ export const checkProps = (component, conformingProps) => {
     component.name);
   expect(propError).toBeUndefined();
 };
+
+export const authContext = {
+  authUser: {
+    uid: 1,
+    email: 'test@example.com',
+    providerData: ["google.com"],
+  },
+  dbUser: {
+    displayName: "Jane Smith",
+  },
+  loading: false
+};
