@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import './drawer.css';
 
-const Drawer = ({ trigger, children, openDefault = false }) => {
+export const Drawer = ({ trigger, children, openDefault = false }) => {
   const [open, setOpen] = useState(openDefault);
   
   return (
@@ -20,5 +20,3 @@ const Drawer = ({ trigger, children, openDefault = false }) => {
     </div>
   )
 }
-
-export default Drawer;

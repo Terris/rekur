@@ -6,7 +6,7 @@ import { ROUTES } from '../../constants';
 const HomePage = () => {
   return(
     <div data-testid="home-page">
-      <h2>Home</h2>
+      <h2>Rekur: Perfectly simple subscriptions.</h2>
     </div>
   )
 }
