@@ -1,3 +1,1 @@
-export const ROUTES = {
-  HOME: '/',
-}
+export * from './routes';
