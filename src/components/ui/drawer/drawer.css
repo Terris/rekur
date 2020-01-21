@@ -1,0 +1,9 @@
+.ui-drawer .ui-drawer-contents {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #ffffff;
+}
+.ui-drawer .ui-drawer-close-btn { border-bottom: 1px solid #ccc; }
