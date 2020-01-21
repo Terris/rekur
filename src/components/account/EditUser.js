@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { db } from '../../firebase';
 import { Message } from '../ui';
 import ReAuthenticateWithPassword from './ReAuthenticateWithPassword';
 
-const EditUser = ({ authUser, dbUser }) => {
+export const EditUser = ({ authUser, dbUser }) => {
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState(authUser.email);
   const [displayName, setDisplayName] = useState(dbUser.displayName);
@@ -28,7 +29,7 @@ const EditUser = ({ authUser, dbUser }) => {
   }
   
   return (
-    <Fragment>
+    <div data-testid="edit-user">
       {message && <Message type="error" message={message} />}
       <form onSubmit={onSubmit}>
         <div className="field">
@@ -37,6 +38,7 @@ const EditUser = ({ authUser, dbUser }) => {
             type="text"
             name="displayName"
             id="displayName"
+            data-testid="displayname-field"
             placeholder='Display Name'
             value={displayName}
             onChange={e => setDisplayName(e.currentTarget.value)} />
@@ -48,6 +50,7 @@ const EditUser = ({ authUser, dbUser }) => {
             label='Email'
             name="email"
             id="email"
+            data-testid="email-field"
             placeholder='Email'
             disabled={authUser.providerData[0].providerId === "google.com" ? "disabled" : ""}
             value={email}
@@ -58,9 +61,11 @@ const EditUser = ({ authUser, dbUser }) => {
         </div>
       </form>
       {!!reAuthWithPassword && <ReAuthenticateWithPassword authUser={authUser} />}
-    </Fragment>
+    </div>
   );
 }
-  
 
-export default EditUser;
+EditUser.propTypes = {
+  authUser: PropTypes.object.isRequired,
+  dbUser: PropTypes.object.isRequired,
+}
