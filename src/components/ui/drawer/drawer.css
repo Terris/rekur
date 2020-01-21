@@ -4,6 +4,19 @@
   right: 0;
   bottom: 0;
   left: 0;
+  display: flex;
+  justify-content: center;
   background: #ffffff;
+  animation: fadeIn 0.2s 1;
+}
+.ui-drawer .ui-drawer-contents .ui-drawer-contents-inner {
+  padding-top: 32px;
+  width: 100%;
+  max-width: 420px;
 }
 .ui-drawer .ui-drawer-close-btn { border-bottom: 1px solid #ccc; }
+
+@keyframes fadeIn {
+  0%   { opacity: 0; transform: translateY(-100px);}
+  100% { opacity: 1; transform: translateY(0); }
+}
