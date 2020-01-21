@@ -9,7 +9,7 @@
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
 }
-html, input, textarea, button { font-size: 12px; -webkit-font-smoothing: antialiased; }
+html, input, textarea, button { font-family: 'Source Sans Pro', sans-serif; font-size: 12px; -webkit-font-smoothing: antialiased; }
 body { margin: 0; text-rendering: optimizeLegibility; }
 img  { width: 100% }
 svg  { max-height: 100% }
@@ -21,7 +21,7 @@ svg  { max-height: 100% }
 /* Base
 ------------------------------------ */
 
-body { font-family: 'Source Sans Pro', sans-serif; font-size: 1rem; background: #fff; color: #424242; }
+body { font-size: 1rem; background: #fff; color: #424242; }
 h1,h2,h3,h4,h5,h6,p,ul,ol,figure,.field { line-height: 1.4; padding: 1rem 20px; }
 hr { border:none; border-bottom: 1px solid #dcdcdc; margin: 1rem 20px; }
 

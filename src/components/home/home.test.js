@@ -1,10 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { findByTestAttr } from '../../../tests/testUtils';
-
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-
 import { AuthUserContext } from '../session';
 import { Home } from './';
 

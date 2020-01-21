@@ -1,7 +1,5 @@
-import React from 'react';
+import Dashboard from './Dashboard';
 
-export const Dashboard = () => (
-  <div data-testid="dashboard">
-    <h2>Dashboard</h2>
-  </div>
-)
+export {
+  Dashboard,
+}
