@@ -1,5 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-export const Home = () = (
-  <h2>Home</h2>
+export const Home = () => (
+  <div data-testid="home">
+    <h2>Home</h2>
+  </div>
 )

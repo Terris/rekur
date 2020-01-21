@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ROUTES } from '../constants';
 import { Home } from './Home';
 
-function App() {
+export const App = () => {
   return (
     <div className="App" data-testid="app">
       <Router>
@@ -11,5 +12,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
