@@ -6,9 +6,11 @@
   left: 0;
   background: #fff;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+.loader .loader-message { margin-bottom: 1rem; max-width: 600px; text-align: center; }
 .loader .loader-icon {
   display: flex;
   justify-content: center;

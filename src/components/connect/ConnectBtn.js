@@ -9,8 +9,7 @@ export const ConnectBtn = ({ authUser, dbUser }) => {
   const [ message, setMessage ] = useState(null);
   const [ loading, setLoading ] = useState(false);
   const stateKey = stringToHash(authUser.email).toString();
-  const redirectURL = 'http://localhost:3000/connect';
-  const connectURL = `https://connect.stripe.com/express/oauth/authorize?client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&redirect_uri=${redirectURL}&state=${stateKey}`;
+  const connectURL = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&scope=read_write&state=${stateKey}`
   
   const doConnect = () => {
     setLoading(true);
