@@ -18,15 +18,13 @@ exports.concludeConnect = functions.firestore.document('stripe_connects/{documen
       await admin.firestore().collection('users').doc(val.uid)
         .set({
           stripeConnectAccountID: response.stripe_user_id,
-          stripeConnectStateKey: null,
           stripeConnectStatus: "CONNECTED"
         }, { merge: true });
       // delete stripe_connect record
       return snap.ref.delete();
     } catch(error) {
-      // log and set error
-      console.log(error);
-      return admin.firestore().collection('users').doc(val.uid).set({ error: error, stripeConnectStatus: "ERROR" }, { merge: true });
+      // log error
+      return admin.firestore().collection('users').doc(val.uid).set({ error: error, stripeConnectStatus: `ERROR: ${error}` }, { merge: true });
     }
 });
 // [END concludeConnect]
