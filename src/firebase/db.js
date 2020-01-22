@@ -25,3 +25,11 @@ export const createUserAlert = (uid, alert) =>
 
 export const deleteUserAlert = (uid, alertId) =>
   user(uid).collection('alerts').doc(alertId).delete()
+
+// Connect API
+// ----------------------------------
+export const initConnect = (uid, stateKey) =>
+  user(uid).update({ stripeConnectStateKey: stateKey, stripeConnectStatue: "INIT", updated_at: moment().format() })
+
+export const concludeConnect = ( uid, code ) =>
+  db.collection('stripe_connects').add({ uid: uid, stripeConnectAuthCode: code, created_at: moment().format() })

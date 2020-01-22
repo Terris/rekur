@@ -8,4 +8,5 @@ export const ROUTES = {
   WELCOME: '/welcome',
   DASHBOARD: '/dashboard',
   NOT_ALLOWED: '/notallowed',
+  CONNECT: '/connect',
 }

@@ -9,7 +9,7 @@
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
 }
-html, input, textarea, button { font-family: 'Source Sans Pro', sans-serif; font-size: 12px; -webkit-font-smoothing: antialiased; }
+html, input, textarea, button { font-family: 'Source Sans Pro', sans-serif; font-size: 14px; -webkit-font-smoothing: antialiased; }
 body { margin: 0; text-rendering: optimizeLegibility; }
 img  { width: 100% }
 svg  { max-height: 100% }

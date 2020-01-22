@@ -8,6 +8,7 @@ import { Home } from '../home';
 import { Dashboard } from '../dashboard';
 import { SignUp, SignIn, ForgotPassword } from '../auth';
 import { Account } from '../account';
+import { Connect } from '../connect';
 import { NotAllowed, NoMatch } from '../static';
 import './app.css';
 
@@ -31,6 +32,7 @@ export const App = () => {
             <Route exact path={ROUTES.DASHBOARD} component={Dashboard} />
             <Route exact path={ROUTES.ACCOUNT} component={Account} />
             <Route exact path={ROUTES.NOT_ALLOWED} component={NotAllowed} />
+            <Route path={ROUTES.CONNECT} component={Connect} />
             <Route component={NoMatch} />
           </Switch>
         </main>
