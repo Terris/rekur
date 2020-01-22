@@ -94,8 +94,7 @@ const ConcludeConnect = ({ authUser, dbUser }) => {
     return <Loader />
   }
   return (
-    <div className="connect" data-testid="connect">
-      <h2>Connect</h2>
+    <div className="concludeconnect" data-testid="concludeconnect">
       {!!state.message && <Message type={state.message.type} message={state.message.message} />}
       {state.connectState === "ERROR"
         ? <ConnectBtn authUser={authUser} dbUser={dbUser} />
