@@ -8,12 +8,12 @@ import { Message, Loader } from '../ui';
 export const ConnectBtn = ({ authUser, dbUser }) => {
   const [ message, setMessage ] = useState(null);
   const [ loading, setLoading ] = useState(false);
-  const stateKey = stringToHash(authUser.email).toString();
+  const stateKey = stringToHash(dbUser.uid).toString();
   const connectURL = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_STRIPE_CLIENT_ID}&scope=read_write&state=${stateKey}`
   
   const doConnect = () => {
     setLoading(true);
-    db.initConnect( dbUser.uid, stateKey )
+    db.initConnect( dbUser.uid )
       .then(() => {
         window.location = connectURL;
       })

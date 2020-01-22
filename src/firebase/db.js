@@ -32,7 +32,7 @@ export const connectExists = (code) =>
   db.collection('stripe_connects').where('stripeConnectAuthCode', '==', code).limit(1).get()
 
 export const initConnect = (uid, stateKey) =>
-  user(uid).update({ stripeConnectStateKey: stateKey, stripeConnectStatus: "INIT", updated_at: moment().format() })
+  user(uid).update({ stripeConnectStatus: "INIT", updated_at: moment().format() })
 
 export const concludeConnect = ( uid, code ) =>
   db.collection('stripe_connects').add({ uid: uid, stripeConnectAuthCode: code, created_at: moment().format() })

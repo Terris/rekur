@@ -4,6 +4,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { withPermission } from '../session';
 import { db } from '../../firebase';
 import { ROUTES } from '../../constants';
+import { stringToHash } from '../../utils';
 import { Loader, Message } from '../ui';
 import { ConnectBtn } from './ConnectBtn';
 
@@ -19,28 +20,24 @@ const CONNECT_ACTIONS = {
 const initialState = {
   loading: true,
   message: null,
-  connectState: "LOADING",
 };
 
 function reducer(state, action) {
   switch (action.type) {
+    case CONNECT_ACTIONS.LOADING:
+      return {
+        loading: true,
+        message: null,
+      }
     case CONNECT_ACTIONS.ERROR:
       return {
         loading: false,
         message: { type: "error", message: action.payload },
-        connectState: "ERROR",
-      }
-    case CONNECT_ACTIONS.USER_CANCELLED_CONNECT:
-      return {
-        loading: false,
-        message: { type: 'error', message: 'You cancelled the Stripe Connect process.' },
-        connectState: "ERROR",
       }
     case CONNECT_ACTIONS.STRIPE_ERROR:
       return {
         loading: false,
-        message: { type: 'error', message: 'Something went wrong with the Connect process. Please try again.' },
-        connectState: "ERROR",
+        message: { type: 'error', message: 'Something went wrong with the Connect process. Please try again.' }
       }
     default:
       return { ...initialState }
@@ -54,39 +51,44 @@ const ConcludeConnect = ({ authUser, dbUser }) => {
   const values = queryString.parse(search); // code, state
   
   useEffect(() => {
-    if ( values.error ) {
-      // stripe returned errors
+    // user already has a stripeConnectID
+    if ( dbUser.stripeConnectAccountID ) {
+      history.push(ROUTES.CONNECT);
+    }
+    // stripe returned error
+    else if ( values.error ) {
       switch (values.error_description) {
         case 'The user denied your request':
-          dispatch({type: CONNECT_ACTIONS.USER_CANCELLED_CONNECT})
+          history.push(ROUTES.CONNECT);
           break;
         default:
           dispatch({type: CONNECT_ACTIONS.STRIPE_ERROR})
       }
-    } else if ( dbUser.stripeConnectAccountID ) {
-      history.push(ROUTES.CONNECT);
-    } else if ( dbUser.stripeConnectStateKey === values.state ) {
+    }
+    // security check: stateKey should match hash(dbUser.uid)
+    else if ( stringToHash(dbUser.uid).toString() === values.state ) {
+      // check passed, set to loading and conclude the connect
       dispatch({type: CONNECT_ACTIONS.LOADING})
-      // check to see if the stripeConnect already exists.
-      db.connectExists(values.code)
-        .then(querySnapshot => {
-          if ( querySnapshot.empty === true ) {
-            db.concludeConnect( dbUser.uid, values.code )
-              .then(() => history.push(ROUTES.CONNECT))
-              .catch(error => dispatch({type: CONNECT_ACTIONS.ERROR, payload: error.message}))
-          } else { history.push(ROUTES.CONNECT) }
+      db.concludeConnect( dbUser.uid, values.code )
+        .then(() => {
+          // update stripeConnectStatus
+          db.user(dbUser.uid).set({ stripeConnectStatus: "CONCLUDING" })
+            .then(() => history.push(ROUTES.CONNECT))
+            .catch(error => dispatch({type: CONNECT_ACTIONS.ERROR, payload: error.message}))
         })
         .catch(error => dispatch({type: CONNECT_ACTIONS.ERROR, payload: error.message}))
-    } else {
+    }
+    // catchall
+    else {
       dispatch({type: CONNECT_ACTIONS.ERROR, payload: "Something went wrong."})
     }
   }, [
-    dbUser.stripeConnectStateKey,
     dbUser.stripeConnectAccountID,
     values.error,
     values.error_description,
     values.state,
-    values.code, dbUser.uid,
+    values.code,
+    dbUser.uid,
     history,
   ]);
   
@@ -96,12 +98,7 @@ const ConcludeConnect = ({ authUser, dbUser }) => {
   return (
     <div className="concludeconnect" data-testid="concludeconnect">
       {!!state.message && <Message type={state.message.type} message={state.message.message} />}
-      {state.connectState === "ERROR"
-        ? <ConnectBtn authUser={authUser} dbUser={dbUser} />
-        : state.connectState === "SUCCESS"
-        ? <p>Well done.</p>
-        : null
-      }
+      {state.connectState === "ERROR" && <ConnectBtn authUser={authUser} dbUser={dbUser} />}
     </div>
   )
 }
