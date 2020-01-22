@@ -9,4 +9,5 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   NOT_ALLOWED: '/notallowed',
   CONNECT: '/connect',
+  CONCLUDE_CONNECT: '/connect/conclude',
 }
