@@ -1,0 +1,18 @@
+.dashboard-panel {
+  display: flex;
+}
+
+.dashboard-nav {
+  width: 25%;
+}
+.dashboard-nav li { padding-bottom: 0.5rem; }
+.dashboard-nav a.active { color: #444; font-weight: 700; }
+.dashboard-main { width: 75%; }
+
+.dashboard .header-tools {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table { border-top: 1px solid #ccc; margin: 1rem 20px; }
+.table .table-item { border-bottom: 1px solid #ccc; }

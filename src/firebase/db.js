@@ -36,3 +36,11 @@ export const initConnect = (uid, stateKey) =>
 
 export const concludeConnect = ( uid, code ) =>
   db.collection('stripe_connects').add({ uid: uid, stripeConnectAuthCode: code, created_at: moment().format() })
+
+// Products API
+// ----------------------------------
+export const usersProducts = (uid) =>
+  user(uid).collection('products')
+
+export const newProduct = (uid, name) =>
+  user(uid).collection('products').add({ name })

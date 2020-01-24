@@ -33,7 +33,7 @@ const SignInWithGoogleBtn = () => {
     <Fragment>
       {message && <Message type="error" message={message} />}
       <button type='button' className="btn" onClick={signInWithGoogle}>
-        <span style={{marginRight: "30px"}}><FontAwesomeIcon icon={faGoogle} /></span>
+        <FontAwesomeIcon icon={faGoogle} style={{marginRight: "30px"}} />
         Sign In with Google
       </button>
     </Fragment>

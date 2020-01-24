@@ -31,6 +31,12 @@ hr { border:none; border-bottom: 1px solid #dcdcdc; margin: 1rem 20px; }
 a,button { color: #868686; text-decoration: none; transition: color 0.2s ease; cursor: pointer; }
 a:hover,button:hover { color: #444; }
 
+/* Lists
+------------------------------------ */
+ul,ol { margin-left: 2.5rem; }
+li { padding-bottom: 0.25rem; }
+nav ol, nav ul { list-style-type: none; margin-left: 0; }
+
 /* Button
 ------------------------------------ */
 
@@ -39,9 +45,12 @@ button.btn { padding: 12px 20px; color: #444; background: #fff; border-radius: 3
 button.btn:hover { color: #fff; background: #444;  }
 button.btn:disabled {
   background: #ccc;
-  color: #ccc;
+  border-color: #ccc;
+  color: #fff;
   cursor: wait;
 }
+
+button.btn.btn-small { padding: 6px 10px; }
 
 /* Input
 ------------------------------------ */
