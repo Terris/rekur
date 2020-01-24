@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { withPermission } from '../session';
-import { db } from '../../firebase';
+import { functions } from '../../firebase';
 import { ROUTES } from '../../constants';
 import { Message } from '../ui';
 
@@ -18,16 +18,19 @@ const NewProduct = ({ dbUser }) => {
     } else {
       setLoading(true);
       setMessage(null);
-      db.newProduct(dbUser.uid, name)
+      functions.createProduct(dbUser.uid, name)
         .then(() => history.push(ROUTES.PRODUCTS))
-        .catch(error => setMessage({ type: "error", message: error.message }))
+        .catch(error => {
+          console.log(error)
+          // setMessage({ type: "error", message: error.message })
+        })
     }
   }
   return (
     <div className="newproduct">
       <h3>Create Subscription Product</h3>
       {message && <Message type="error" message={message} />}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} autoComplete="off">
         <div className="field">
           <label htmlFor="name">Product Name</label>
           <input

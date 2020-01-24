@@ -30,7 +30,7 @@ const NotConnected = ({ authUser, dbUser }) => (
 )
 
 const Dashboard = ({ authUser, dbUser }) => (
-  <div class="dashboard" data-testid="dashboard">
+  <div className="dashboard" data-testid="dashboard">
     {dbUser.stripeConnectAccountID
       ? <Connected />
       : <NotConnected authUser={authUser} dbUser={dbUser} />

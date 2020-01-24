@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/functions';
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -20,6 +21,7 @@ const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 const db = firebase.firestore();
 const auth = firebase.auth();
 const firestore = firebase.firestore;
+const functions = firebase.functions();
 
 export {
   emailAuthProvider,
@@ -27,4 +29,5 @@ export {
   db,
   auth,
   firestore,
+  functions,
 };

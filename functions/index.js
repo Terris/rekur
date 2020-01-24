@@ -32,6 +32,28 @@ exports.concludeConnect = functions.firestore.document('stripe_connects/{documen
 });
 // [END concludeConnect]
 
+// [START createStripeProduct]
+// create a stripe product and a firestore product
+exports.createStripeProduct = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
+  }
+  const user = await getUser(data.uid);
+  const stripeProduct = await stripe.products
+    .create({ name: data.name, type: 'service' }, { stripe_account: user.stripeConnectAccountID })
+    .catch(error => {
+      logError(error, context, "functions.createStripeProduct.stripeProduct");
+      throw new functions.https.HttpsError('error', error);
+    })
+  return admin.firestore().collection('users').doc(data.uid).collection('products')
+    .add({ name: data.name, stripeProductID: stripeProduct.id })
+    .catch(error => {
+      logError(error, context, "functions.createStripeProduct");
+      throw new functions.https.HttpsError('error', error);
+    });
+});
+// [END createStripeProduct]
+
 // [START events]
 // receive and process Stripe Hooks
 exports.events = functions.https.onRequest((request, response) => {
@@ -53,7 +75,6 @@ exports.events = functions.https.onRequest((request, response) => {
   }
 });
 // [END events]
-
 
 // exports.exampleStripeHookTrigger = functions.database.ref('/stripe_events/{eventId}').onCreate((snapshot, context) => {
 //   return console.log({
