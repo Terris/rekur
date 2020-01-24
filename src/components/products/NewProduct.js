@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { withPermission } from '../session';
 import { functions } from '../../firebase';
 import { ROUTES } from '../../constants';
-import { Message } from '../ui';
+import { Message, Loader } from '../ui';
 
-const NewProduct = ({ dbUser }) => {
+export const NewProduct = ({ dbUser }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -19,13 +18,15 @@ const NewProduct = ({ dbUser }) => {
       setLoading(true);
       setMessage(null);
       functions.createProduct(dbUser.uid, name)
-        .then(() => history.push(ROUTES.PRODUCTS))
-        .catch(error => {
-          console.log(error)
-          // setMessage({ type: "error", message: error.message })
-        })
+        .then(response => history.push(`${ROUTES.PRODUCTS}/${response.data.id}/pricing/new`))
+        .catch(error => setMessage({ type: "error", message: error }))
     }
   }
+  
+  if ( loading ) {
+    return <Loader message="Saving your new product" />
+  }
+  
   return (
     <div className="newproduct">
       <h3>Create Subscription Product</h3>
@@ -48,6 +49,3 @@ const NewProduct = ({ dbUser }) => {
     </div>
   )
 }
-
-const condition = authUser => !!authUser;
-export default withPermission(condition)(NewProduct);

@@ -7,6 +7,28 @@ const stripe = require('stripe')(functions.config().stripe.token);
 const endpointSecret = functions.config().stripe.endpoint_secret;
 const currency = functions.config().stripe.currency || 'USD';
 
+// [START events]
+// receive and process Stripe Hooks
+exports.events = functions.https.onRequest((request, response) => {
+  const signature = request.headers["stripe-signature"];
+  try {
+    let event = stripe.webhooks.constructEvent(request.rawBody, signature, endpointSecret);
+    return admin.firestore().collection('events').add(event)
+      .then((docRef) => {
+        return response.json({ received: true, ref: docRef.id });
+      })
+      .catch((error) => {
+        logError(error, event, "functions.events - collection('events').add" )
+        return response.status(500).end();
+      });
+  }
+  catch (error) {
+    logError(error, event, "functions.events" )
+    return response.status(400).end();
+  }
+});
+// [END events]
+
 // [START concludeConnect]
 // Send auth code to stripe to conclude the connect process
 exports.concludeConnect = functions.firestore.document('stripe_connects/{documentId}')
@@ -40,13 +62,14 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
   }
   const user = await getUser(data.uid);
   const stripeProduct = await stripe.products
-    .create({ name: data.name, type: 'service' }, { stripe_account: user.stripeConnectAccountID })
+    .create({ name: data.name, type: 'service' }, { stripeAccount: user.stripeConnectAccountID })
     .catch(error => {
       logError(error, context, "functions.createStripeProduct.stripeProduct");
       throw new functions.https.HttpsError('error', error);
     })
   return admin.firestore().collection('users').doc(data.uid).collection('products')
     .add({ name: data.name, stripeProductID: stripeProduct.id })
+    .then((docRef) => { return { id: docRef.id } })
     .catch(error => {
       logError(error, context, "functions.createStripeProduct");
       throw new functions.https.HttpsError('error', error);
@@ -54,34 +77,38 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
 });
 // [END createStripeProduct]
 
-// [START events]
-// receive and process Stripe Hooks
-exports.events = functions.https.onRequest((request, response) => {
-  const signature = request.headers["stripe-signature"];
-  try {
-    let event = stripe.webhooks.constructEvent(request.rawBody, signature, endpointSecret);
-    return admin.firestore().collection('events').add(event)
-      .then((docRef) => {
-        return response.json({ received: true, ref: docRef.id });
-      })
-      .catch((error) => {
-        logError(error, event, "functions.events - collection('events').add" )
-        return response.status(500).end();
-      });
+// [START createStripePlan]
+// create a stripe product and a firestore product
+exports.createStripeProduct = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
   }
-  catch (error) {
-    logError(error, event, "functions.events" )
-    return response.status(400).end();
-  }
+  const user = await getUser(data.uid);
+  const stripePlan = await stripe.plans
+    .create({
+      amount: data.amount,
+      currency: 'usd',
+      interval: 'month',
+      product: { name: data.productName },
+    }, { stripeAccount: user.stripeConnectAccountID })
+    .catch(error => {
+      logError(error, context, "functions.createStripeProduct.stripeProduct");
+      throw new functions.https.HttpsError('error', error);
+    })
+  return admin.firestore().collection('users').doc(data.uid).collection('products').doc(data.productID).collection('plans')
+    .add({
+      amount: data.amount,
+      currency: 'usd',
+      interval: 'month',
+      stripePlanID: stripePlan.id,
+    })
+    .then((docRef) => { return { id: docRef.id } })
+    .catch(error => {
+      logError(error, context, "functions.createStripePlan");
+      throw new functions.https.HttpsError('error', error);
+    });
 });
-// [END events]
-
-// exports.exampleStripeHookTrigger = functions.database.ref('/stripe_events/{eventId}').onCreate((snapshot, context) => {
-//   return console.log({
-//     eventId: context.params.eventId,
-//     data: snapshot.val()
-//   });
-// });
+// [END createStripeProduct]
 
 // [START Utilities]
 // get user

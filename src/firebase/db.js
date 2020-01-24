@@ -42,5 +42,8 @@ export const concludeConnect = ( uid, code ) =>
 export const usersProducts = (uid) =>
   user(uid).collection('products')
 
+export const usersProduct = (uid, productID) =>
+  usersProducts(uid).doc(productID)
+
 export const newProduct = (uid, name) =>
   user(uid).collection('products').add({ name })

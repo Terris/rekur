@@ -24,3 +24,23 @@ export const useUserProducts = (uid) => {
   }, [uid]);
   return { loading, message, products }
 }
+
+export const useUserProduct = (uid, productID) => {
+  const [product, setProduct] = useState({});
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    db.usersProduct(uid, productID)
+      .get()
+      .then((snapshot) => {
+        setProduct(snapshot.data());
+        setLoading(false);
+      })
+      .catch(error => {
+        setMessage({type: 'error', message: error.message})
+        setLoading(false);
+      })
+  }, [uid, productID])
+  return { loading, product, message }
+}

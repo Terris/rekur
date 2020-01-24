@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ROUTES } from '../../constants';
-import { withPermission } from '../session';
 import { useUserProducts } from './hooks';
 import { Loader, Message } from '../ui';
 
-const Products = ({ dbUser }) => {
+export const Products = ({ dbUser }) => {
   const { loading, message, products } = useUserProducts(dbUser.uid);
   
   if (loading) {
@@ -30,6 +29,3 @@ const Products = ({ dbUser }) => {
     </div>
   )
 }
-
-const condition = authUser => !!authUser;
-export default withPermission(condition)(Products);
