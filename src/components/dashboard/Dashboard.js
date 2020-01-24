@@ -31,11 +31,9 @@ const NotConnected = ({ authUser, dbUser }) => (
 
 const Dashboard = ({ authUser, dbUser }) => (
   <div class="dashboard" data-testid="dashboard">
-    <h2>Dashboard</h2>
-    <hr />
     {dbUser.stripeConnectAccountID
       ? <Connected />
-      : <NotConnected />
+      : <NotConnected authUser={authUser} dbUser={dbUser} />
     }
   </div>
 );

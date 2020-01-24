@@ -15,17 +15,19 @@ exports.concludeConnect = functions.firestore.document('stripe_connects/{documen
     try {
       // send auth code to stripe
       const response = await stripe.oauth.token({ grant_type: 'authorization_code', code: val.stripeConnectAuthCode });
-      // add stripeUserID to user & cleanup fields
+      // add stripeUserID, refreshToken to user & cleanup connect doc
       await admin.firestore().collection('users').doc(val.uid)
         .set({
           stripeConnectAccountID: response.stripe_user_id,
-          stripeConnectStatus: "CONNECTED"
+          stripeConnectStatus: "CONNECTED",
+          stripeRefreshToken: response.refresh_token,
         }, { merge: true });
       // delete stripe_connect record
       return snap.ref.delete();
     } catch(error) {
       // log error
-      return admin.firestore().collection('users').doc(val.uid).set({ error: error, stripeConnectStatus: `ERROR: ${error}` }, { merge: true });
+      await logError(error, val, "functions.concludeConnect");
+      return admin.firestore().collection('users').doc(val.uid).set({ stripeConnectStatus: `ERROR: ${error}` }, { merge: true });
     }
 });
 // [END concludeConnect]
@@ -40,19 +42,38 @@ exports.events = functions.https.onRequest((request, response) => {
       .then((docRef) => {
         return response.json({ received: true, ref: docRef.id });
       })
-      .catch((err) => {
-        console.error(err)
+      .catch((error) => {
+        logError(error, event, "functions.events - collection('events').add" )
         return response.status(500).end();
       });
   }
-  catch (err) {
+  catch (error) {
+    logError(error, event, "functions.events" )
     return response.status(400).end();
   }
 });
+// [END events]
+
+
 // exports.exampleStripeHookTrigger = functions.database.ref('/stripe_events/{eventId}').onCreate((snapshot, context) => {
 //   return console.log({
 //     eventId: context.params.eventId,
 //     data: snapshot.val()
 //   });
 // });
-// [END events]
+
+// [START Utilities]
+// get user
+function getUser(uid) {
+  return admin.firestore().collection('users').doc(uid)
+    .get()
+    .then(doc => {
+      return doc.data();
+    })
+    .catch(error => logError(error, uid, "functions.getUser"))
+}
+
+function logError(error, context, note) {
+  admin.firestore().collection('errors').add({ error: error, context: context, note: note })
+}
+// [END Utilities]
