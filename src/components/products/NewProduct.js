@@ -2,13 +2,29 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { functions } from '../../firebase';
 import { ROUTES } from '../../constants';
-import { Message, Loader } from '../ui';
+import { Message, Loader, Select } from '../ui';
 
 export const NewProduct = ({ dbUser }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState("USD");
+  const [interval, setInterval] = useState("");
+  
+  const intervalOptions = [
+    {value: "day", label: "Day"},
+    {value: "week", label: "Week"},
+    {value: "month", label: "Month"},
+    {value: "year", label: "Year"},
+  ]
+  
+  const processAmount = (amount) => {
+    const allowed = ["0","1","2","3","4","5","6","7","8","9",".",","];
+    let newAmount = "$" + amount.split('').filter(char => allowed.includes(char)).join('');
+    setAmount(newAmount);
+  }
   
   const onSubmit = e => {
     e.preventDefault();
@@ -17,8 +33,8 @@ export const NewProduct = ({ dbUser }) => {
     } else {
       setLoading(true);
       setMessage(null);
-      functions.createProduct(dbUser.uid, name)
-        .then(response => history.push(`${ROUTES.PRODUCTS}/${response.data.id}/pricing/new`))
+      functions.createProduct(dbUser.uid, name, amount, currency, interval.value)
+        .then(response => history.push(`${ROUTES.PRODUCTS}/${response.data.id}`))
         .catch(error => setMessage({ type: "error", message: error }))
     }
   }
@@ -29,7 +45,7 @@ export const NewProduct = ({ dbUser }) => {
   
   return (
     <div className="newproduct">
-      <h3>Create Subscription Product</h3>
+      <h3>Create a Subscription Product</h3>
       {message && <Message type="error" message={message} />}
       <form onSubmit={onSubmit} autoComplete="off">
         <div className="field">
@@ -38,9 +54,35 @@ export const NewProduct = ({ dbUser }) => {
             type="text"
             name="name"
             id="name"
-            placeholder='The Bodacious Subscription'
+            placeholder='Bodacious Plan'
             value={name}
             onChange={e => setName(e.currentTarget.value)} />
+        </div>
+        <div className="fieldrow">
+          <div className="field">
+            <label htmlFor="amount">Amount</label>
+            <input
+              type="text"
+              name="amount"
+              id="amount"
+              placeholder='$10.99'
+              value={amount}
+              onChange={e => processAmount(e.currentTarget.value)} />
+          </div>
+          <div className="field">
+            <label htmlFor="currency">Currency</label>
+            <input
+              type="text"
+              name="currency"
+              id="currency"
+              placeholder='9.00'
+              value={currency}
+              onChange={e => setCurrency(e.currentTarget.value)} />
+          </div>
+          <div className="field">
+            <label htmlFor="interval">Interval</label>
+            <Select placeholder="Select Interval" options={intervalOptions} defaultValue={{value: "month", label: 'Month'}} onChange={(value) => setInterval(value)} />
+          </div>
         </div>
         <div className="field">
           <button type='submit' className="btn" disabled={loading}>Create Subscription Product</button>

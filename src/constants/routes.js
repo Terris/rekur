@@ -17,5 +17,4 @@ export const ROUTES = {
   PRODUCTS: '/dashboard/products',
   PRODUCT: '/dashboard/products/:id',
   NEW_PRODUCT: '/dashboard/products/new',
-  NEW_PRODUCT_PRICING: '/dashboard/products/:id/pricing/new',
 }

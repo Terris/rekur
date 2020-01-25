@@ -4,6 +4,7 @@ import { Drawer } from './drawer';
 import { Loader } from './loader';
 import { Message } from './message';
 import { Modal } from './modal';
+import { Select } from './select';
 
 export {
   Avatar,
@@ -12,4 +13,5 @@ export {
   Loader,
   Message,
   Modal,
+  Select,
 }

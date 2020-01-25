@@ -54,52 +54,30 @@ exports.concludeConnect = functions.firestore.document('stripe_connects/{documen
 });
 // [END concludeConnect]
 
-// [START createStripeProduct]
-// create a stripe product and a firestore product
-exports.createStripeProduct = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
-  }
-  const user = await getUser(data.uid);
-  const stripeProduct = await stripe.products
-    .create({ name: data.name, type: 'service' }, { stripeAccount: user.stripeConnectAccountID })
-    .catch(error => {
-      logError(error, context, "functions.createStripeProduct.stripeProduct");
-      throw new functions.https.HttpsError('error', error);
-    })
-  return admin.firestore().collection('users').doc(data.uid).collection('products')
-    .add({ name: data.name, stripeProductID: stripeProduct.id })
-    .then((docRef) => { return { id: docRef.id } })
-    .catch(error => {
-      logError(error, context, "functions.createStripeProduct");
-      throw new functions.https.HttpsError('error', error);
-    });
-});
-// [END createStripeProduct]
-
 // [START createStripePlan]
-// create a stripe product and a firestore product
-exports.createStripeProduct = functions.https.onCall(async (data, context) => {
+// create a stripe plan
+exports.createStripePlan = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
   }
   const user = await getUser(data.uid);
   const stripePlan = await stripe.plans
     .create({
-      amount: data.amount,
-      currency: 'usd',
-      interval: 'month',
-      product: { name: data.productName },
+      amount: Number(data.amount.replace(/[^0-9.-]+/g,""))*100).toFixed(0),
+      currency: data.currency,
+      interval: data.interval,
+      product: { name: data.name },
     }, { stripeAccount: user.stripeConnectAccountID })
     .catch(error => {
-      logError(error, context, "functions.createStripeProduct.stripeProduct");
+      logError(error, context, "functions.createStripePlan.stripePlan");
       throw new functions.https.HttpsError('error', error);
     })
   return admin.firestore().collection('users').doc(data.uid).collection('products').doc(data.productID).collection('plans')
     .add({
-      amount: data.amount,
-      currency: 'usd',
-      interval: 'month',
+      name: data.name,
+      amount: Number(data.amount.replace(/[^0-9.-]+/g,""))*100).toFixed(0),
+      currency: data.currency,
+      interval: data.interval,
       stripePlanID: stripePlan.id,
     })
     .then((docRef) => { return { id: docRef.id } })
