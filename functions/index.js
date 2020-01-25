@@ -54,16 +54,16 @@ exports.concludeConnect = functions.firestore.document('stripe_connects/{documen
 });
 // [END concludeConnect]
 
-// [START createStripePlan]
-// create a stripe plan
-exports.createStripePlan = functions.https.onCall(async (data, context) => {
+// [START createStripeProduct]
+// create a Stripe Plan & Product
+exports.createStripeProduct = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
   }
   const user = await getUser(data.uid);
   const stripePlan = await stripe.plans
     .create({
-      amount: Number(data.amount.replace(/[^0-9.-]+/g,""))*100).toFixed(0),
+      amount: data.amount,
       currency: data.currency,
       interval: data.interval,
       product: { name: data.name },
@@ -72,10 +72,11 @@ exports.createStripePlan = functions.https.onCall(async (data, context) => {
       logError(error, context, "functions.createStripePlan.stripePlan");
       throw new functions.https.HttpsError('error', error);
     })
-  return admin.firestore().collection('users').doc(data.uid).collection('products').doc(data.productID).collection('plans')
+  console.log(stripePlan);
+  return admin.firestore().collection('users').doc(data.uid).collection('products')
     .add({
       name: data.name,
-      amount: Number(data.amount.replace(/[^0-9.-]+/g,""))*100).toFixed(0),
+      amount: data.amount,
       currency: data.currency,
       interval: data.interval,
       stripePlanID: stripePlan.id,

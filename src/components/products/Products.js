@@ -20,6 +20,7 @@ export const Products = ({ dbUser }) => {
         <p><Link to={ROUTES.NEW_PRODUCT}><button className="btn btn-small"><FontAwesomeIcon icon={faPlus} style={{marginRight: "10px"}} /> New Product</button></Link></p>
       </header>
       <div className="table">
+        {!products && <p>You haven't created any products yet. <Link to={ROUTES.NEW_PRODUCT}>Create you first product</Link>.</p>}
         {!!products && products.map(product => (
           <div key={product.id} className="table-item products-product">
             <span className="table-item-header">{product.name}</span>

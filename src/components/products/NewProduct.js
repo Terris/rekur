@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { functions } from '../../firebase';
 import { ROUTES } from '../../constants';
 import { Message, Loader, Select } from '../ui';
+import { currencyToCents } from '../../utils';
 
 export const NewProduct = ({ dbUser }) => {
   const history = useHistory();
@@ -33,9 +34,13 @@ export const NewProduct = ({ dbUser }) => {
     } else {
       setLoading(true);
       setMessage(null);
-      functions.createProduct(dbUser.uid, name, amount, currency, interval.value)
-        .then(response => history.push(`${ROUTES.PRODUCTS}/${response.data.id}`))
-        .catch(error => setMessage({ type: "error", message: error }))
+      const convAmount = currencyToCents(amount);
+      functions.createProduct(dbUser.uid, name, convAmount, currency, interval.value)
+        .then(response => history.push(ROUTES.PRODUCTS))
+        .catch(error => {
+          setMessage({ type: "error", message: "Something went wrong. Please try again." });
+          setLoading(false);
+        })
     }
   }
   
@@ -46,7 +51,7 @@ export const NewProduct = ({ dbUser }) => {
   return (
     <div className="newproduct">
       <h3>Create a Subscription Product</h3>
-      {message && <Message type="error" message={message} />}
+      {message && <Message type={message.type} message={message.message} />}
       <form onSubmit={onSubmit} autoComplete="off">
         <div className="field">
           <label htmlFor="name">Product Name</label>

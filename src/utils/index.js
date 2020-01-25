@@ -9,3 +9,7 @@ export const stringToHash = (string) => {
   }
   return hash;
 }
+
+// sanitizes $, converts to cents
+export const currencyToCents = (amount) =>
+  (amount.replace(/[^0-9.-]+/g,"")*100).toFixed(0)
