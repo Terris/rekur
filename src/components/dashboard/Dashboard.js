@@ -3,7 +3,7 @@ import { Route, NavLink } from 'react-router-dom';
 import { withPermission } from '../session';
 import { ROUTES } from '../../constants';
 import { ConnectBtn } from '../connect';
-import { Products, NewProduct } from '../products';
+import { Products, Product, NewProduct } from '../products';
 import "./Dashboard.css";
 
 const Connected = ({ dbUser }) => {
@@ -13,10 +13,13 @@ const Connected = ({ dbUser }) => {
         <ul>
           <li><NavLink exact to={ROUTES.DASHBOARD} activeClassName="active">Home</NavLink></li>
           <li><NavLink to={ROUTES.PRODUCTS} activeClassName="active">Products</NavLink></li>
+          <li><NavLink exact to={ROUTES.HOME} activeClassName="active">Customers</NavLink></li>
+          <li><NavLink exact to={ROUTES.HOME} activeClassName="active">Coupons</NavLink></li>
         </ul>
       </nav>
       <div className="dashboard-main">
         <Route exact path={ROUTES.PRODUCTS} render={(props) => <Products {...props} dbUser={dbUser} />} />
+        <Route exact path={ROUTES.PRODUCT} render={(props) => <Product {...props} dbUser={dbUser} />} />
         <Route exact path={ROUTES.NEW_PRODUCT} render={(props) => <NewProduct {...props} dbUser={dbUser} />} />
       </div>
     </div>

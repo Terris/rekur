@@ -11,5 +11,8 @@ export const stringToHash = (string) => {
 }
 
 // sanitizes $, converts to cents
-export const currencyToCents = (amount) =>
-  (amount.replace(/[^0-9.-]+/g,"")*100).toFixed(0)
+export const currencyToCents = (currency) =>
+  (currency.replace(/[^0-9.-]+/g,"")*100).toFixed(0)
+
+export const centsToCurrency = (cents) =>
+  "$" + (cents/100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

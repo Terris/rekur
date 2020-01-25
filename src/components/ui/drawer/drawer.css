@@ -10,7 +10,6 @@
   animation: fadeIn 0.2s 1;
 }
 .ui-drawer .ui-drawer-contents .ui-drawer-contents-inner {
-  padding-top: 32px;
   width: 100%;
   max-width: 420px;
 }
