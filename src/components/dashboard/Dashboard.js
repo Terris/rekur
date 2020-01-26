@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import { Switch, Route, NavLink } from 'react-router-dom';
 import { withPermission } from '../session';
 import { ROUTES } from '../../constants';
 import { ConnectBtn } from '../connect';
@@ -18,9 +18,12 @@ const Connected = ({ dbUser }) => {
         </ul>
       </nav>
       <div className="dashboard-main">
-        <Route exact path={ROUTES.PRODUCTS} render={(props) => <Products {...props} dbUser={dbUser} />} />
-        <Route exact path={ROUTES.PRODUCT} render={(props) => <Product {...props} dbUser={dbUser} />} />
-        <Route exact path={ROUTES.NEW_PRODUCT} render={(props) => <NewProduct {...props} dbUser={dbUser} />} />
+        <Switch>
+          <Route exact path={ROUTES.NEW_PRODUCT} render={(props) => <NewProduct {...props} dbUser={dbUser} />} />
+          <Route exact path={ROUTES.PRODUCT} render={(props) => <Product {...props} dbUser={dbUser} />} />
+          <Route exact path={ROUTES.PRODUCTS} render={(props) => <Products {...props} dbUser={dbUser} />} />
+          
+        </Switch>
       </div>
     </div>
   )

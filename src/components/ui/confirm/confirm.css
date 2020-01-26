@@ -1,0 +1,16 @@
+.confirm {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #ffffffde;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.confirm-inner {
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 1rem 20px;
+}

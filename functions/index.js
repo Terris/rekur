@@ -72,9 +72,8 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
       logError(error, context, "functions.createStripePlan.stripePlan");
       throw new functions.https.HttpsError('error', error);
     })
-  console.log(stripePlan);
-  return admin.firestore().collection('users').doc(data.uid).collection('products')
-    .add({
+  return admin.firestore().collection('users').doc(data.uid).collection('products').doc(stripePlan.id)
+    .set({
       name: data.name,
       amount: data.amount,
       currency: data.currency,
@@ -88,6 +87,28 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
     });
 });
 // [END createStripeProduct]
+
+// [START deleteStripeProduct]
+// create a Stripe Plan & Product
+exports.deleteStripeProduct = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
+  }
+  const user = await getUser(data.uid);
+  const stripePlan = await stripe.plans
+    .del(data.productID, { stripeAccount: user.stripeConnectAccountID })
+    .catch(error => {
+      logError(error, context, "functions.deleteStripePlan.stripePlan");
+      throw new functions.https.HttpsError('error', error);
+    })
+  return admin.firestore().collection('users').doc(data.uid).collection('products').doc(stripePlan.id)
+    .delete()
+    .catch(error => {
+      logError(error, context, "functions.createStripePlan");
+      throw new functions.https.HttpsError('error', error);
+    });
+});
+// [END deleteStripeProduct]
 
 // [START Utilities]
 // get user

@@ -57,6 +57,15 @@ button.btn:disabled {
 
 button.btn.btn-small { padding: 6px 10px; }
 
+.btn.btn-alert {
+  border-color: #d86a6a;
+  color: #d86a6a;
+}
+.btn.btn-alert:hover {
+  
+  background: #d86a6a;
+}
+
 /* Input
 ------------------------------------ */
 ::placeholder { color: #ccc; }
