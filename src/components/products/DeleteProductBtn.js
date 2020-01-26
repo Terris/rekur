@@ -5,7 +5,7 @@ import { functions } from '../../firebase';
 import { Confirm, Loader, Message } from '../ui';
 
 
-export const DeleteProductBtn = ({ uid, productID }) => {
+export const DeleteProductBtn = ({ uid, planID, productID }) => {
   const history = useHistory();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [message, setMessage] = useState(null);
@@ -23,7 +23,7 @@ export const DeleteProductBtn = ({ uid, productID }) => {
     setConfirmOpen(false);
     setLoading(true);
     // run firebase function to delete stripe product
-    functions.deleteProduct(uid, productID)
+    functions.deleteProduct(uid, planID, productID)
       .then(() => {
         setLoading(false);
         history.push(ROUTES.PRODUCTS);

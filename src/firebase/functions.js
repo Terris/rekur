@@ -5,7 +5,7 @@ export const createProduct = (uid, name, amount, currency, interval) => {
   return createStripeProduct({ uid, name, amount, currency, interval })
 }
 
-export const deleteProduct = (uid, productID) => {
+export const deleteProduct = (uid, planID, productID) => {
   let deleteStripeProduct = functions.httpsCallable('deleteStripeProduct');
-  return deleteStripeProduct({ uid, productID })
+  return deleteStripeProduct({ uid, planID, productID })
 }

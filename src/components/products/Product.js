@@ -18,7 +18,7 @@ export const Product = ({ dbUser }) => {
       <h2>{product.name}</h2>
       <h3>{centsToCurrency(product.amount)} {product.currency} per {product.interval}</h3>
       <hr />
-      <DeleteProductBtn uid={dbUser.uid} productID={id} />
+      <DeleteProductBtn uid={dbUser.uid} planID={product.stripePlanID} productID={product.stripeProductID} />
     </div>
   )
 }

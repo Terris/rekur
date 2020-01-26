@@ -18,12 +18,10 @@ exports.events = functions.https.onRequest((request, response) => {
         return response.json({ received: true, ref: docRef.id });
       })
       .catch((error) => {
-        logError(error, event, "functions.events - collection('events').add" )
         return response.status(500).end();
       });
   }
   catch (error) {
-    logError(error, event, "functions.events" )
     return response.status(400).end();
   }
 });
@@ -47,8 +45,6 @@ exports.concludeConnect = functions.firestore.document('stripe_connects/{documen
       // delete stripe_connect record
       return snap.ref.delete();
     } catch(error) {
-      // log error
-      await logError(error, val, "functions.concludeConnect");
       return admin.firestore().collection('users').doc(val.uid).set({ stripeConnectStatus: `ERROR: ${error}` }, { merge: true });
     }
 });
@@ -69,7 +65,6 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
       product: { name: data.name },
     }, { stripeAccount: user.stripeConnectAccountID })
     .catch(error => {
-      logError(error, context, "functions.createStripePlan.stripePlan");
       throw new functions.https.HttpsError('error', error);
     })
   return admin.firestore().collection('users').doc(data.uid).collection('products').doc(stripePlan.id)
@@ -79,10 +74,10 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
       currency: data.currency,
       interval: data.interval,
       stripePlanID: stripePlan.id,
+      stripeProductID: stripePlan.product,
     })
     .then((docRef) => { return { id: docRef.id } })
     .catch(error => {
-      logError(error, context, "functions.createStripePlan");
       throw new functions.https.HttpsError('error', error);
     });
 });
@@ -95,16 +90,23 @@ exports.deleteStripeProduct = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
   }
   const user = await getUser(data.uid);
+  // delete the plan
   const stripePlan = await stripe.plans
+    .del(data.planID, { stripeAccount: user.stripeConnectAccountID })
+    .catch(error => {
+      console.log(error);
+      throw new functions.https.HttpsError('error', error);
+    })
+  // delete the associated product
+  await stripe.products
     .del(data.productID, { stripeAccount: user.stripeConnectAccountID })
     .catch(error => {
-      logError(error, context, "functions.deleteStripePlan.stripePlan");
+      console.log(error);
       throw new functions.https.HttpsError('error', error);
     })
   return admin.firestore().collection('users').doc(data.uid).collection('products').doc(stripePlan.id)
     .delete()
     .catch(error => {
-      logError(error, context, "functions.createStripePlan");
       throw new functions.https.HttpsError('error', error);
     });
 });
