@@ -5,7 +5,7 @@ import { functions } from '../../firebase';
 import { Confirm, Loader, Message } from '../ui';
 
 
-export const DeleteProductBtn = ({ uid, planID, productID }) => {
+export const DeletePlanBtn = ({ uid, planID, productID }) => {
   const history = useHistory();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [message, setMessage] = useState(null);
@@ -22,11 +22,11 @@ export const DeleteProductBtn = ({ uid, planID, productID }) => {
   const handleConfirm = () => {
     setConfirmOpen(false);
     setLoading(true);
-    // run firebase function to delete stripe product
-    functions.deleteProduct(uid, planID, productID)
+    // run firebase function to delete stripe plan & product
+    functions.deletePlan(uid, planID, productID)
       .then(() => {
         setLoading(false);
-        history.push(ROUTES.PRODUCTS);
+        history.push(ROUTES.PLANS);
       })
       .catch(error => {
         setMessage({type: 'error', message: "Something went wrong. Please try again."});
@@ -35,16 +35,16 @@ export const DeleteProductBtn = ({ uid, planID, productID }) => {
   };
   
   if (loading) {
-    return <Loader />
+    return <Loader message="Deleting your plan." />
   }
   return (
     <>
       {!!message && <Message type={message.type} message={message.message} />}
-      <p><button className="btn btn-alert" onClick={() => attemptDelete()}>Delete Product</button></p>
+      <p><button className="btn btn-alert" onClick={() => attemptDelete()}>Delete Plan</button></p>
       {confirmOpen &&
         <Confirm
-          message="Are you sure you want to delete this product?"
-          confirmTitle="Delete Product"
+          message="Are you sure you want to delete this plan?"
+          confirmTitle="Delete Plan"
           confirmText="Delete"
           onConfirm={() => handleConfirm()}
           onCancel={() => handleCancel()} />

@@ -3,7 +3,7 @@ import { Switch, Route, NavLink } from 'react-router-dom';
 import { withPermission } from '../session';
 import { ROUTES } from '../../constants';
 import { ConnectBtn } from '../connect';
-import { Products, Product, NewProduct } from '../products';
+import { Plans, Plan, NewPlan } from '../plans';
 import "./Dashboard.css";
 
 const Connected = ({ dbUser }) => {
@@ -12,16 +12,16 @@ const Connected = ({ dbUser }) => {
       <nav className="dashboard-nav">
         <ul>
           <li><NavLink exact to={ROUTES.DASHBOARD} activeClassName="active">Home</NavLink></li>
-          <li><NavLink to={ROUTES.PRODUCTS} activeClassName="active">Products</NavLink></li>
+          <li><NavLink to={ROUTES.PLANS} activeClassName="active">Plans</NavLink></li>
           <li><NavLink exact to={ROUTES.HOME} activeClassName="active">Customers</NavLink></li>
           <li><NavLink exact to={ROUTES.HOME} activeClassName="active">Coupons</NavLink></li>
         </ul>
       </nav>
       <div className="dashboard-main">
         <Switch>
-          <Route exact path={ROUTES.NEW_PRODUCT} render={(props) => <NewProduct {...props} dbUser={dbUser} />} />
-          <Route exact path={ROUTES.PRODUCT} render={(props) => <Product {...props} dbUser={dbUser} />} />
-          <Route exact path={ROUTES.PRODUCTS} render={(props) => <Products {...props} dbUser={dbUser} />} />
+          <Route exact path={ROUTES.NEW_PLAN} render={(props) => <NewPlan {...props} dbUser={dbUser} />} />
+          <Route exact path={ROUTES.PLAN} render={(props) => <Plan {...props} dbUser={dbUser} />} />
+          <Route exact path={ROUTES.PLANS} render={(props) => <Plans {...props} dbUser={dbUser} />} />
           
         </Switch>
       </div>

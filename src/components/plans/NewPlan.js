@@ -5,7 +5,7 @@ import { ROUTES } from '../../constants';
 import { Message, Loader, Select } from '../ui';
 import { currencyToCents } from '../../utils';
 
-export const NewProduct = ({ dbUser }) => {
+export const NewPlan = ({ dbUser }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -35,8 +35,8 @@ export const NewProduct = ({ dbUser }) => {
       setLoading(true);
       setMessage(null);
       const convAmount = currencyToCents(amount);
-      functions.createProduct(dbUser.uid, name, convAmount, currency, interval.value)
-        .then(response => history.push(ROUTES.PRODUCTS))
+      functions.createPlan(dbUser.uid, name, convAmount, currency, interval.value)
+        .then(response => history.push(ROUTES.PLANS))
         .catch(error => {
           setMessage({ type: "error", message: "Something went wrong. Please try again." });
           setLoading(false);
@@ -45,16 +45,16 @@ export const NewProduct = ({ dbUser }) => {
   }
   
   if ( loading ) {
-    return <Loader message="Saving your new product" />
+    return <Loader message="Saving your new plan." />
   }
   
   return (
     <div className="newproduct">
-      <h3>Create a Subscription Product</h3>
+      <h3>Create a Subscription Plan</h3>
       {message && <Message type={message.type} message={message.message} />}
       <form onSubmit={onSubmit} autoComplete="off">
         <div className="field">
-          <label htmlFor="name">Product Name</label>
+          <label htmlFor="name">Plan Name</label>
           <input
             type="text"
             name="name"
@@ -90,7 +90,7 @@ export const NewProduct = ({ dbUser }) => {
           </div>
         </div>
         <div className="field">
-          <button type='submit' className="btn" disabled={loading}>Create Subscription Product</button>
+          <button type='submit' className="btn" disabled={loading}>Create Subscription Plan</button>
         </div>
       </form>
     </div>

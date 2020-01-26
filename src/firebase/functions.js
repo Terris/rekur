@@ -1,11 +1,11 @@
 import { functions } from './firebase';
 
-export const createProduct = (uid, name, amount, currency, interval) => {
-  let createStripeProduct = functions.httpsCallable('createStripeProduct');
-  return createStripeProduct({ uid, name, amount, currency, interval })
+export const createPlan = (uid, name, amount, currency, interval) => {
+  let createStripePlan = functions.httpsCallable('createStripePlan');
+  return createStripePlan({ uid, name, amount, currency, interval })
 }
 
-export const deleteProduct = (uid, planID, productID) => {
-  let deleteStripeProduct = functions.httpsCallable('deleteStripeProduct');
-  return deleteStripeProduct({ uid, planID, productID })
+export const deletePlan = (uid, planID, productID) => {
+  let deleteStripePlan = functions.httpsCallable('deleteStripePlan');
+  return deleteStripePlan({ uid, planID, productID })
 }

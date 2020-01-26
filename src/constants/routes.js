@@ -13,8 +13,8 @@ export const ROUTES = {
   // STRIPE CONNECT
   CONNECT: '/connect',
   CONCLUDE_CONNECT: '/connect/conclude',
-  // PRODUCTS
-  PRODUCTS: '/dashboard/products',
-  PRODUCT: '/dashboard/products/:id',
-  NEW_PRODUCT: '/dashboard/products/new',
+  // PLANS
+  PLANS: '/dashboard/plans',
+  PLAN: '/dashboard/plans/:id',
+  NEW_PLAN: '/dashboard/plans/new',
 }

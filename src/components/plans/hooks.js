@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { db } from '../../firebase';
 
-export const useUserProducts = (uid) => {
-  const [products, setProducts] = useState({});
+export const useUserPlans = (uid) => {
+  const [plans, setPlans] = useState({});
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
   
   useEffect(() => {
-    db.usersProducts(uid)
+    db.usersPlans(uid)
       .get()
       .then(snapshot => {
-        const allProducts = snapshot.docs.map(product => ({
-          ...product.data(),
-          id: product.id,
+        const allPlans = snapshot.docs.map(plan => ({
+          ...plan.data(),
+          id: plan.id,
         }))
-        setProducts(allProducts);
+        setPlans(allPlans);
         setLoading(false);
       })
       .catch(error => {
@@ -22,25 +22,25 @@ export const useUserProducts = (uid) => {
         setLoading(false);
       })
   }, [uid]);
-  return { loading, message, products }
+  return { loading, message, plans }
 }
 
-export const useUserProduct = (uid, productID) => {
-  const [product, setProduct] = useState({});
+export const useUserPlan = (uid, planID) => {
+  const [plan, setPlan] = useState({});
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    db.usersProduct(uid, productID)
+    db.usersPlan(uid, planID)
       .get()
       .then((snapshot) => {
-        setProduct(snapshot.data());
+        setPlan(snapshot.data());
         setLoading(false);
       })
       .catch(error => {
         setMessage({type: 'error', message: error.message})
         setLoading(false);
       })
-  }, [uid, productID])
-  return { loading, product, message }
+  }, [uid, planID])
+  return { loading, message, plan }
 }

@@ -50,9 +50,9 @@ exports.concludeConnect = functions.firestore.document('stripe_connects/{documen
 });
 // [END concludeConnect]
 
-// [START createStripeProduct]
+// [START createStripePlan]
 // create a Stripe Plan & Product
-exports.createStripeProduct = functions.https.onCall(async (data, context) => {
+exports.createStripePlan = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
   }
@@ -67,7 +67,7 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
     .catch(error => {
       throw new functions.https.HttpsError('error', error);
     })
-  return admin.firestore().collection('users').doc(data.uid).collection('products').doc(stripePlan.id)
+  return admin.firestore().collection('users').doc(data.uid).collection('plans').doc(stripePlan.id)
     .set({
       name: data.name,
       amount: data.amount,
@@ -81,11 +81,11 @@ exports.createStripeProduct = functions.https.onCall(async (data, context) => {
       throw new functions.https.HttpsError('error', error);
     });
 });
-// [END createStripeProduct]
+// [END createStripePlan]
 
-// [START deleteStripeProduct]
+// [START deleteStripePlan]
 // create a Stripe Plan & Product
-exports.deleteStripeProduct = functions.https.onCall(async (data, context) => {
+exports.deleteStripePlan = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
   }
@@ -104,13 +104,13 @@ exports.deleteStripeProduct = functions.https.onCall(async (data, context) => {
       console.log(error);
       throw new functions.https.HttpsError('error', error);
     })
-  return admin.firestore().collection('users').doc(data.uid).collection('products').doc(stripePlan.id)
+  return admin.firestore().collection('users').doc(data.uid).collection('plans').doc(stripePlan.id)
     .delete()
     .catch(error => {
       throw new functions.https.HttpsError('error', error);
     });
 });
-// [END deleteStripeProduct]
+// [END deleteStripePlan]
 
 // [START Utilities]
 // get user
