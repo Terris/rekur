@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { functions } from '../../firebase';
-import { ROUTES } from '../../constants';
+import { ROUTES, PLAN_INTERVALS } from '../../constants';
 import { Message, Loader, Select } from '../ui';
-import { currencyToCents } from '../../utils';
+import { currencyToCents, processAmountInput } from '../../utils';
 
 export const NewPlan = ({ dbUser }) => {
   const history = useHistory();
@@ -13,19 +13,6 @@ export const NewPlan = ({ dbUser }) => {
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [interval, setInterval] = useState("");
-  
-  const intervalOptions = [
-    {value: "day", label: "Day"},
-    {value: "week", label: "Week"},
-    {value: "month", label: "Month"},
-    {value: "year", label: "Year"},
-  ]
-  
-  const processAmount = (amount) => {
-    const allowed = ["0","1","2","3","4","5","6","7","8","9",".",","];
-    let newAmount = "$" + amount.split('').filter(char => allowed.includes(char)).join('');
-    setAmount(newAmount);
-  }
   
   const onSubmit = e => {
     e.preventDefault();
@@ -72,7 +59,7 @@ export const NewPlan = ({ dbUser }) => {
               id="amount"
               placeholder='$10.99'
               value={amount}
-              onChange={e => processAmount(e.currentTarget.value)} />
+              onChange={e => setAmount(processAmountInput(e.currentTarget.value))} />
           </div>
           <div className="field">
             <label htmlFor="currency">Currency</label>
@@ -80,13 +67,13 @@ export const NewPlan = ({ dbUser }) => {
               type="text"
               name="currency"
               id="currency"
-              placeholder='9.00'
+              placeholder='USD'
               value={currency}
               onChange={e => setCurrency(e.currentTarget.value)} />
           </div>
           <div className="field">
             <label htmlFor="interval">Interval</label>
-            <Select placeholder="Select Interval" options={intervalOptions} defaultValue={{value: "month", label: 'Month'}} onChange={(value) => setInterval(value)} />
+            <Select placeholder="Select Interval" options={PLAN_INTERVALS} defaultValue={PLAN_INTERVALS.month} onChange={(value) => setInterval(value)} />
           </div>
         </div>
         <div className="field">

@@ -3,7 +3,7 @@ import { Switch, Route, NavLink } from 'react-router-dom';
 import { withPermission } from '../session';
 import { ROUTES } from '../../constants';
 import { ConnectBtn } from '../connect';
-import { Plans, Plan, NewPlan } from '../plans';
+import { Plans, Plan, NewPlan, } from '../plans';
 import "./Dashboard.css";
 
 const Connected = ({ dbUser }) => {
@@ -22,7 +22,6 @@ const Connected = ({ dbUser }) => {
           <Route exact path={ROUTES.NEW_PLAN} render={(props) => <NewPlan {...props} dbUser={dbUser} />} />
           <Route exact path={ROUTES.PLAN} render={(props) => <Plan {...props} dbUser={dbUser} />} />
           <Route exact path={ROUTES.PLANS} render={(props) => <Plans {...props} dbUser={dbUser} />} />
-          
         </Switch>
       </div>
     </div>

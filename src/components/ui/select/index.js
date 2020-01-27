@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "./select.css";
 
 export const Select = ({ placeholder, options, defaultValue, onChange }) => {
-  const [value, setValue] = useState(defaultValue); // { label: "Foo", value: 'foo' }
+  const [value, setValue] = useState(defaultValue); // key: { label: "Foo", value: 'foo' }
   const [open, setOpen] = useState(false);
   
   useEffect(() => {
@@ -16,8 +16,8 @@ export const Select = ({ placeholder, options, defaultValue, onChange }) => {
         : <div className="select-value">{value.label}</div>
       }
       <div className={`select-options ${open ? 'open' : ''}`}>
-        {options.map(option => {
-          return <div className="select-option" key={option.value} onClick={() => setValue(option)}>{option.label}</div>
+        {Object.keys(options).map((key, i) => {
+          return <div className="select-option" key={options[key].value} onClick={() => setValue(options[key])}>{options[key].label}</div>
         })}
       </div>
     </div>

@@ -16,8 +16,8 @@ export const Plans = ({ dbUser }) => {
   }
   return (
     <div className="plans">
+      {message && <Message type={message.type} message={message.message} />}
       <header className="header-tools">
-        {message && <Message type={message.type} message={message.message} />}
         <h3>Plans</h3>
         <p><Link to={ROUTES.NEW_PLAN}><button className="btn btn-small"><FontAwesomeIcon icon={faPlus} style={{marginRight: "10px"}} /> New Plan</button></Link></p>
       </header>

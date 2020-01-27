@@ -83,6 +83,37 @@ exports.createStripePlan = functions.https.onCall(async (data, context) => {
 });
 // [END createStripePlan]
 
+// [START editStripePlan]
+// edit a Plan & Product
+exports.editStripePlan = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
+  }
+  const user = await getUser(data.uid);
+  const stripePlan = await stripe.plans
+    .update({
+      amount: data.amount,
+      product: { name: data.name },
+    }, { stripeAccount: user.stripeConnectAccountID })
+    .catch(error => {
+      throw new functions.https.HttpsError('error', error);
+    })
+  return admin.firestore().collection('users').doc(data.uid).collection('plans').doc(stripePlan.id)
+    .set({
+      name: data.name,
+      amount: data.amount,
+      currency: data.currency,
+      interval: data.interval,
+      stripePlanID: stripePlan.id,
+      stripeProductID: stripePlan.product,
+    })
+    .then((docRef) => { return { id: docRef.id } })
+    .catch(error => {
+      throw new functions.https.HttpsError('error', error);
+    });
+});
+// [END editStripePlan]
+
 // [START deleteStripePlan]
 // create a Stripe Plan & Product
 exports.deleteStripePlan = functions.https.onCall(async (data, context) => {

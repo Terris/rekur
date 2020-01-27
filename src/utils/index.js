@@ -16,3 +16,9 @@ export const currencyToCents = (currency) =>
 
 export const centsToCurrency = (cents) =>
   "$" + (cents/100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+export const processAmountInput = (amount) => {
+  const allowed = ["0","1","2","3","4","5","6","7","8","9",".",","];
+  let newAmount = "$" + amount.split('').filter(char => allowed.includes(char)).join('');
+  return newAmount;
+}
