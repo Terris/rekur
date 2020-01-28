@@ -12,6 +12,7 @@ export const NewPlan = ({ dbUser }) => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const [intervalCount, setIntervalCount] = useState("");
   const [interval, setInterval] = useState("");
   
   const onSubmit = e => {
@@ -70,6 +71,16 @@ export const NewPlan = ({ dbUser }) => {
               placeholder='USD'
               value={currency}
               onChange={e => setCurrency(e.currentTarget.value)} />
+          </div>
+          <div className="field">
+            <label htmlFor="intervalCount">Interval Count</label>
+            <input
+              type="number"
+              name="intervalCount"
+              id="intervalCount"
+              placeholder='1'
+              value={intervalCount}
+              onChange={e => setIntervalCount(e.currentTarget.value)} />
           </div>
           <div className="field">
             <label htmlFor="interval">Interval</label>

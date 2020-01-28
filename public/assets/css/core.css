@@ -109,10 +109,12 @@ input[type="number"]:disabled {
 ------------------------------------ */
 label { font-size: 0.8rem; font-weight: 600; color: #9e9e9e; }
 
-/* Field Group
+/* Form Template
 ------------------------------------ */
 .fieldrow { display: flex; justify-content: space-between; }
 .fieldrow .field { flex-grow: 1; flex-basis: 0; }
+.form-lang-value { border-bottom: 1px solid #ccc; }
+.form-lang-value.blank { font-style: italic; }
 
 /* Text Mods
 ------------------------------------ */
